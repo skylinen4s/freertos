@@ -25,7 +25,7 @@ INCS = \
 all: main.bin
         
 main.bin: test-romfs.o main.c
-	$(CROSS_COMPILE)gcc $(INCS )\
+	$(CROSS_COMPILE)gcc $(INCS)\
 		-fno-common -O0 \
 		-gdwarf-2 -g3 \
 		-mcpu=cortex-m3 -mthumb \
