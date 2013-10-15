@@ -14,14 +14,18 @@ FREERTOS_SRC = $(CODEBASE)/libraries/FreeRTOS
 FREERTOS_INC = $(FREERTOS_SRC)/include/                                       
 FREERTOS_PORT_INC = $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/
 
-all: main.bin
 
+
+INCS = \
+      -I. -I$(FREERTOS_INC) -I$(FREERTOS_PORT_INC) \
+      -I$(CODEBASE)/libraries/CMSIS/CM3/CoreSupport \
+      -I$(CODEBASE)/libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
+      -I$(CODEBASE)/libraries/STM32F10x_StdPeriph_Driver/inc 
+
+all: main.bin
+        
 main.bin: test-romfs.o main.c
-	$(CROSS_COMPILE)gcc \
-		-I. -I$(FREERTOS_INC) -I$(FREERTOS_PORT_INC) \
-		-I$(CODEBASE)/libraries/CMSIS/CM3/CoreSupport \
-		-I$(CODEBASE)/libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
-		-I$(CODEBASE)/libraries/STM32F10x_StdPeriph_Driver/inc \
+	$(CROSS_COMPILE)gcc $(INCS )\
 		-fno-common -O0 \
 		-gdwarf-2 -g3 \
 		-mcpu=cortex-m3 -mthumb \
