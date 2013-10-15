@@ -17,7 +17,20 @@ extern const char _sromfs;
 static void setup_hardware();
 
 volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
+/*to receive string*/
+volatile xQueueHandle serial_str_queue = NULL;
+/*to receive byte*/
+volatile xQueueHandle serial_rx_queue = NULL;
 
+/* Queue structure used for messages */
+typedef struct {
+    char str[100];
+} serial_str_msg;
+
+/* Queue structure used for characters */
+typedef struct {
+    char ch;
+} serial_ch_msg;
 
 /* IRQ handler to handle USART2 interruptss (both transmit and receive
  * interrupts). */
@@ -93,6 +106,8 @@ int main()
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
+	serial_str_queue = xQueueCreate(10, sizeof(serial_str_msg));
+	serial_rx_queue = xQueueCreate(1, sizeof(serial_ch_msg));
 
 	/* Create a task to output text read from romfs. */
 	xTaskCreate(read_romfs_task,
