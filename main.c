@@ -92,6 +92,32 @@ char receive_byte()
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg.ch;
 }
+void readwrite_task(void *pvParameters)
+{
+	char str[100];
+	char ch;
+	char test[] = {"\n\r"};
+	int count_char;
+	int done;
+
+	while(1) {
+		count_char = 0;
+		done = 0;
+		do{
+			ch = receive_byte();
+			if ((ch == '\n') || (ch == '\r')){
+				str[count_char++] = '\0';
+				fio_write(1,test, 2);
+				done = -1;
+			}
+			else{
+				str[count_char++] = ch;
+				fio_write(1, &ch, 1);
+			}
+		} while (!done);
+
+	}
+}
 
 int main()
 {
@@ -107,6 +133,10 @@ int main()
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
 	serial_rx_queue = xQueueCreate(1, sizeof(serial_ch_msg));
 
+	/* Create a task to output text read from keyboard input. */
+	xTaskCreate(readwrite_task,
+	            (signed portCHAR *) "Read & Write",
+	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
 	/* Start running the tasks. */
 	vTaskStartScheduler();
 
