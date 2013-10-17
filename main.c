@@ -36,6 +36,7 @@ typedef struct {
 void USART2_IRQHandler()
 {
 	static signed portBASE_TYPE xHigherPriorityTaskWoken;
+	serial_ch_msg rx_msg;
 
 	/* If this interrupt is for a transmit... */
 	if (USART_GetITStatus(USART2, USART_IT_TXE) != RESET) {
@@ -47,7 +48,17 @@ void USART2_IRQHandler()
 		/* Diables the transmit interrupt. */
 		USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
 		/* If this interrupt is for a receive... */
-	}
+	}else if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
+        /* Receive the byte from the buffer. */
+        rx_msg.ch = USART_ReceiveData(USART2);
+
+        /* Queue the received byte. */
+        if(!xQueueSendToBackFromISR(serial_rx_queue, &rx_msg, &xHigherPriorityTaskWoken)) {
+            /* If there was an error queueing the received byte,
+             * freeze. */
+            while(1);
+        }
+    }
 	else {
 		/* Only transmit and receive interrupts should be enabled.
 		 * If this is another type of interrupt, freeze.
@@ -75,9 +86,17 @@ void send_byte(char ch)
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 }
 
+char receive_byte()
+{
+	serial_ch_msg msg;
+	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
+	return msg.ch;
+}
+
 void read_romfs_task(void *pvParameters)
 {
 	char buf[128];
+	char ch;
 	size_t count;
 	int fd = fs_open("/romfs/test.txt", 0, O_RDONLY);
 	do {
@@ -86,9 +105,14 @@ void read_romfs_task(void *pvParameters)
 		
 		//Write buffer to fd 1 (stdout, through uart)
 		fio_write(1, buf, count);
+
 	} while (count);
 
-	while (1);
+	while (1)
+	{
+		ch = receive_byte();
+		fio_write(1, &ch, 1);
+	}
 }
 
 int main()
