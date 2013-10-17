@@ -11,6 +11,7 @@
 /* Filesystem includes */
 #include "filesystem.h"
 #include "fio.h"
+#include "lib.h"
 
 extern const char _sromfs;
 
@@ -95,8 +96,8 @@ char receive_byte()
 void readwrite_task(void *pvParameters)
 {
 	char str[100];
+	char ch_buf[2] = {'0','\0'};
 	char ch;
-	char test[] = {"\n\r"};
 	int count_char;
 	int done;
 
@@ -107,12 +108,13 @@ void readwrite_task(void *pvParameters)
 			ch = receive_byte();
 			if ((ch == '\n') || (ch == '\r')){
 				str[count_char++] = '\0';
-				fio_write(1,test, 2);
+				print_next_line();
 				done = -1;
 			}
 			else{
 				str[count_char++] = ch;
-				fio_write(1, &ch, 1);
+				ch_buf[0] = ch;
+				print_msg(ch_buf);
 			}
 		} while (!done);
 
