@@ -19,8 +19,7 @@ void check_input(char *str)
 		print_next_line();
 	}
 	else{
-		if (!strncmp(str,"\0",1)){
-		}
+		if (str[0] == '\0');
 		else{
 			print_msg("'");
 			print_msg(&str[0]);
