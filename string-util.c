@@ -77,7 +77,7 @@ int strlen(char *str)
 
 int strcmp(const char *s1, const char *s2)
 {
-	for( ; *s1 == *s2; x++, y++)
+	for( ; *s1 == *s2; s1++, s2++)
 		if(*s1 == '\0')
 			return 0;
 	return *s1 - *s2;
@@ -86,10 +86,10 @@ int strcmp(const char *s1, const char *s2)
 int strncmp(const char *s1, const char *s2, size_t n)
 {
 	int i;
-	for(i = 1; (*x == *y) && i++ <= n ; x++, y++)
-		if(*x == '\0')
+	for(i = 1; (*s1 == *s2) && i++ <= n ; s1++, s2++)
+		if(*s1 == '\0')
 			return 0;
-	return *x-*y;
+	return *s1-*s2;
 }
 
 
