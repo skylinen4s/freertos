@@ -86,10 +86,11 @@ int strcmp(const char *s1, const char *s2)
 int strncmp(const char *s1, const char *s2, size_t n)
 {
 	int i;
-	for(i = 1; (*s1 == *s2) && i++ <= n ; s1++, s2++)
-		if(*s1 == '\0')
-			return 0;
-	return *s1-*s2;
+	for(i = 0; i < n; i++)
+		if(s1[i] != s2[i]){
+			return s1[i] - s2[i];
+		}
+	return 0;
 }
 
 

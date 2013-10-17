@@ -6,14 +6,17 @@
 void check_input(char *str)
 {
 	if (!strncmp(str, "help", 4)){
+		print_msg("help");
 	}
 	else if (!strncmp(str, "hello", 5)){
+		print_msg("hello");
 	}
 	else if (!strncmp(str, "ps", 2)){
+		print_msg("ps");
 	}
-	else if ((!strncmp(str, "echo ", 5) && (str[5]!=' '))){
+	else if ((!strncmp(str, "echo ", 5) && (str[5] != ' '))){
 		print_msg(&str[5]);
-		print_msg("\n\r");
+		print_next_line();
 	}
 	else{
 		if (!strncmp(str,"\0",1)){
