@@ -12,6 +12,7 @@
 #include "filesystem.h"
 #include "fio.h"
 #include "lib.h"
+#include "shell.h"
 
 extern const char _sromfs;
 
@@ -117,7 +118,7 @@ void readwrite_task(void *pvParameters)
 				print_msg(ch_buf);
 			}
 		} while (!done);
-
+			check_input(str);
 	}
 }
 
