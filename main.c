@@ -17,8 +17,7 @@ extern const char _sromfs;
 static void setup_hardware();
 
 volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
-/*to receive string*/
-volatile xQueueHandle serial_str_queue = NULL;
+
 /*to receive byte*/
 volatile xQueueHandle serial_rx_queue = NULL;
 
@@ -88,7 +87,7 @@ void read_romfs_task(void *pvParameters)
 		//Write buffer to fd 1 (stdout, through uart)
 		fio_write(1, buf, count);
 	} while (count);
-	
+
 	while (1);
 }
 
@@ -106,7 +105,6 @@ int main()
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
-	serial_str_queue = xQueueCreate(10, sizeof(serial_str_msg));
 	serial_rx_queue = xQueueCreate(1, sizeof(serial_ch_msg));
 
 	/* Create a task to output text read from romfs. */
