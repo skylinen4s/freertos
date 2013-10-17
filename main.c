@@ -112,7 +112,15 @@ void readwrite_task(void *pvParameters)
 				print_next_line();
 				done = -1;
 			}
-			else{
+			else if ((ch == BACKSPACE || ch == '\b') && (count_char != 0)){
+				str[count_char--] = '\0';
+
+				/* 1.back to last word
+ 				   2.replace it with space
+				   3.cursor back to the last word*/	
+				print_msg("\b \b");
+			}
+			else if(ch != BACKSPACE){
 				str[count_char++] = ch;
 				ch_buf[0] = ch;
 				print_msg(ch_buf);
