@@ -3,16 +3,44 @@
 #include "string-util.h"
 #include "fio.h"
 
+
+typedef struct
+{
+        char *name;
+        char *desc;
+        void (*func)(void);
+} cmd_content;
+
+/*pre-define*/
+static void cmd_help(void);
+static void cmd_ps(void);
+
+#define COMMAND(n, d) {.name=#n, .func= cmd_ ## n, .desc=d}
+static cmd_content cmd_list[] = {
+        COMMAND(help, "help menu"),
+        COMMAND(ps, "Run the ps command")
+};
+
+static void cmd_help(void)
+{
+	print_msg("test cmd_help\n\r");
+}
+
+static void cmd_ps(void)
+{
+	print_msg("test cmd_ps\n\r");
+}
+
 void check_input(char *str)
 {
 	if (!strncmp(str, "help", 4)){
-		print_msg("help");
+		cmd_help();
 	}
 	else if (!strncmp(str, "hello", 5)){
 		print_msg("hello");
 	}
 	else if (!strncmp(str, "ps", 2)){
-		print_msg("ps");
+		cmd_ps();
 	}
 	else if ((!strncmp(str, "echo ", 5) && (str[5] != ' '))){
 		print_msg(&str[5]);
