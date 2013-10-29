@@ -7,5 +7,6 @@
 #define BACKSPACE 127 /* ascii: 0x7f*/
 
 void check_input(char *str);
+void readwrite_task(void *pvParameters);
 
 #endif

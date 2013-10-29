@@ -26,4 +26,39 @@ void check_input(char *str)
 			print_msg("': command not found\n\r");
 		}
 	}
+}
+
+void readwrite_task(void *pvParameters)
+{
+        char str[100];
+        char ch_buf[2] = {'0','\0'};
+        char ch;
+        int count_char;
+        int done;
+
+        while(1) {
+                count_char = 0;
+                done = 0;
+                do{
+                        ch = receive_byte();
+                        if ((ch == '\n') || (ch == '\r')){
+                                str[count_char++] = '\0';
+                                print_next_line();
+                                done = -1;
+                        }
+                        else if ((ch == BACKSPACE || ch == '\b') && (count_char != 0)){
+                                str[count_char--] = '\0';
+								/*1.back to last word
+								 *2.replace it with space
+								 *3.cursor back to the last word*/        
+                                print_msg("\b \b");
+                        }
+                        else if(ch != BACKSPACE){
+                                str[count_char++] = ch;
+                                ch_buf[0] = ch;
+                                print_msg(ch_buf);
+                        }
+                } while (!done);
+                        check_input(str);
+        }
 }	
