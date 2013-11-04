@@ -9,14 +9,14 @@ typedef struct
         char *name;
         char *desc;
         void (*func)(void);
-} cmd_content;
+} cmd_struct;
 
 /*pre-define*/
 static void cmd_help(void);
 static void cmd_ps(void);
 
 #define COMMAND(n, d) {.name=#n, .func= cmd_ ## n, .desc=d}
-static cmd_content cmd_list[] = {
+static cmd_struct cmd_list[] = {
         COMMAND(help, "help menu"),
         COMMAND(ps, "Run the ps command")
 };
@@ -59,7 +59,7 @@ void check_input(char *str)
 void readwrite_task(void *pvParameters)
 {
         char str[100];
-        char ch_buf[2] = {'0','\0'};
+        char ch_buf[2] = {0};
         char ch;
         int count_char;
         int done;
