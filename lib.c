@@ -38,10 +38,10 @@ static void print_func(const char *format, va_list args)
 					{
 						ch[0] = format[i];
 						str = ch;
-						i--;
+						i--;//counteract 'i++' below, or it would skip the char follow on '%'
 					}
 			}
-			i++;
+			i++;//to skip conversion specifiers
 		}
 		else{
 			ch[0] = format[i];
