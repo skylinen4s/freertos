@@ -17,15 +17,15 @@ static void cmd_ps(void);
 
 #define COMMAND(n, d) {.name=#n, .func= cmd_ ## n, .desc=d}
 static cmd_struct cmd_list[] = {
-        COMMAND(help, "help menu\n\r"),
-        COMMAND(ps, "Run the ps command\n")
+        COMMAND(help, "help menu"),
+        COMMAND(ps, "Run the ps command")
 };
 
 static void cmd_help(void)
 {	
 	int i;
 	for(i = 0; i < sizeof(cmd_list)/sizeof(cmd_struct); i++)
-	printf("%s",cmd_list[i].desc);
+	printf(" %s\t\t%s\n\r", cmd_list[i].name, cmd_list[i].desc);
 }
 
 static void cmd_ps(void)

@@ -38,15 +38,16 @@ static void print_func(const char *format, va_list args)
 					{
 						ch[0] = format[i];
 						str = ch;
+						i--;
 					}
 			}
-			print_msg(str);
 			i++;
 		}
 		else{
 			ch[0] = format[i];
 			str = ch;
 		}
+	print_msg(str);
 	}
 }
 
